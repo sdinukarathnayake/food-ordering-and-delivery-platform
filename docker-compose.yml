@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+
+  mongo-db:
+    image: mongo
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb+srv://dinuka:1234@cluster0.zdovbfd.mongodb.net/uberEats?retryWrites=true&w=majority&appName=Cluster0
+    depends_on:
+      - mongo-db
+
+  payment-service:
+    build: ./payment-service
+    container_name: payment-service
+    ports:
+      - "5001:5000"
+    environment:
+      - MONGO_URI=mongodb+srv://dinuka:1234@cluster0.zdovbfd.mongodb.net/uberEats?retryWrites=true&w=majority&appName=Cluster0
+    depends_on:
+      - mongo-db
+
+  customer-app:
+    build: ./customer-app
+    container_name: customer-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - order-service
+      - payment-service
+
+volumes:
+  mongo-data:
