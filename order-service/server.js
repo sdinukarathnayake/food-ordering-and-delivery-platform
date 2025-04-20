@@ -13,7 +13,15 @@ app.use(cors());
 
 app.use('/orders', orderRoutes);
 
-mongoose.connect(process.env.MONGO_URI).then(() => {
-  console.log('MongoDB connected');
-  app.listen(5000, () => console.log('Order service running on port 5000'));
-}).catch(err => console.error(err));
+//mongodb connection string
+const connectionString = process.env.MONGO_URI;
+
+mongoose.connect(connectionString)
+    .then(() => console.log("MongoDB connected"))
+    .catch((err) => {
+        console.log(err)
+        process.exit(1);
+    })
+
+const port = 5000;
+app.listen(port, () => console.log("Order service running on port 5000"));

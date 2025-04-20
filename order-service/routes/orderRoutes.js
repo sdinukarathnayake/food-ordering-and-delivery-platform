@@ -1,11 +1,26 @@
+const { 
+    creatOrder, viewOrder, viewCustomerOrderHistory, updateOrder, updateOrderPaymentStatus, updateOrderStatus, 
+    updateOrderDeliveryPerson, deleteOrder, viewAllOrders
+} = require('../controllers/orderController');
+
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/orderController');
 
-router.post('/', orderController.createOrder);
-router.get('/', orderController.getOrders);
-router.get('/:id', orderController.getOrderById);
-router.put('/:id', orderController.updateOrder);
-router.delete('/:id', orderController.deleteOrder);
+router.post('/create-order', creatOrder);
+
+router.get('/view/:id', viewOrder);
+router.get('/view-history/:id', viewCustomerOrderHistory);
+
+// update details
+router.put('/update/:id', updateOrder);
+router.put('/update-payment-status/:id', updateOrderPaymentStatus);
+router.put('/update-order-status/:id', updateOrderStatus);
+
+router.put('/update-delivery-person/:id', updateOrderDeliveryPerson);
+
+router.delete('/delete/:id', deleteOrder);
+
+// manage all orders - admin
+router.get('/view-all-orders', viewAllOrders);
 
 module.exports = router;
