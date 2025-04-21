@@ -3,7 +3,7 @@ const Customer = require('../models/customerModel');
 // register a new customer
 const register = async (req, res) => {
     try {
-        const { name, email, phone, username, password, currentLocationLatitude, currentLocationLongitude } = req.bodya;
+        const { name, email, phone, username, password, currentLocationLatitude, currentLocationLongitude } = req.body;
 
         // Check for duplicate email or username
         const existingEmail = await Customer.findOne({ email });

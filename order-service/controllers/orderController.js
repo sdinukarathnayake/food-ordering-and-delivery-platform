@@ -2,7 +2,7 @@ const Order = require('../models/Order');
 const getDrivingDistance = require('../utils/getDrivingDistance');
 
 // Create a new order
-const creatOrder = async (req, res) => {
+const createOrder = async (req, res) => {
     try {
         const {
             cartId,
@@ -283,7 +283,7 @@ const deleteOrder = async (req, res) => {
 };
 
 module.exports = {
-    creatOrder,
+    createOrder,
     viewAllOrders,
     viewOrder,
     viewCustomerOrderHistory,

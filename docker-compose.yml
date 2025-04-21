@@ -1,4 +1,5 @@
 services:
+
   order-service:
     build: ./order-service
     container_name: order-service
@@ -8,11 +9,19 @@ services:
       - MONGO_URI=mongodb+srv://dinuka:1234@cluster0.zdovbfd.mongodb.net/uberEats?retryWrites=true&w=majority&appName=Cluster0
       - ORS_API_KEY=5b3ce3597851110001cf6248d96d91fec01e4e8f86ea6331b2c3dcb8
 
+  cart-service:
+    build: ./cart-service
+    container_name: cart-service
+    ports:
+      - "5003:5003"
+    environment:
+      - MONGO_URI=mongodb+srv://dinuka:1234@cluster0.zdovbfd.mongodb.net/uberEats?retryWrites=true&w=majority&appName=Cluster0
+
   payment-service:
     build: ./payment-service
     container_name: payment-service
     ports:
-      - "5001:5000"
+      - "5001:5001"
     environment:
       - MONGO_URI=mongodb+srv://dinuka:1234@cluster0.zdovbfd.mongodb.net/uberEats?retryWrites=true&w=majority&appName=Cluster0
 
@@ -20,9 +29,17 @@ services:
     build: ./customer-service
     container_name: customer-service
     ports:
-      - "5002:5000"
+      - "5002:5002"
     environment:
       - MONGO_URI=mongodb+srv://dinuka:1234@cluster0.zdovbfd.mongodb.net/uberEats?retryWrites=true&w=majority&appName=Cluster0
+
+  restaurant-service:
+    build: ./restaurant-service
+    container_name: restaurant-service
+    ports:
+      - "5004:5004"
+    environment:
+      - MONGO_URI=mongodb+srv://dinuka:1234@cluster0.zdovbfd.mongodb.net/uberEats?retryWrites=true&w=majority&appName=Cluster0  
 
   customer-app:
     build: ./customer-app
@@ -33,3 +50,5 @@ services:
       - order-service
       - payment-service
       - customer-service
+      - cart-service
+      - restaurant-service

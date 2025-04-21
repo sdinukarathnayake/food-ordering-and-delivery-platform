@@ -1,12 +1,12 @@
 const { 
-    creatOrder, viewOrder, viewCustomerOrderHistory, updateOrder, updateOrderPaymentStatus, updateOrderStatus, 
+    createOrder, viewOrder, viewCustomerOrderHistory, updateOrder, updateOrderPaymentStatus, updateOrderStatus, 
     updateOrderDeliveryPerson, deleteOrder, viewAllOrders
 } = require('../controllers/orderController');
 
 const express = require('express');
 const router = express.Router();
 
-router.post('/create-order', creatOrder);
+router.post('/create-order', createOrder);
 
 router.get('/view/:id', viewOrder);
 router.get('/view-history/:id', viewCustomerOrderHistory);
