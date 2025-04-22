@@ -6,11 +6,11 @@ const mongoose = require('mongoose');
 const customerSchema = new mongoose.Schema({
 
     customerId: {
-        type: String,
+        type: String, 
         unique: true,
     },
 
-    name: {
+    customerName: {
         type: String,
         required: true,
     },
@@ -36,7 +36,7 @@ const customerSchema = new mongoose.Schema({
         required: true 
     },
 
-    username: {
+    name: {
         type: String,
         required: true,
         unique: true,
