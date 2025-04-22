@@ -1,0 +1,37 @@
+.admin-panel{
+    margin-top: 200px;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.admin-pannel-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 30px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .admin-btn {
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  
+  .admin-btn:hover {
+    background-color: #ff4d00;
+    transform: translateY(-2px);
+  }
+  
+  .admin-btn:active {
+    transform: scale(0.98);
+  }
+  

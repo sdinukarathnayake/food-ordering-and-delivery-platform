@@ -1,59 +1,124 @@
-const MenuItem = require('../models/menuItem');
+const Menu = require('../models/menuModel');
+const fs = require('fs');
 
-// Add a new menu item
-exports.addMenuItem = async (req, res) => {
-  try {
-    const menuItem = new MenuItem(req.body);
-    await menuItem.save();
-    res.status(201).json(menuItem);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+const addFood = async (req, res) => {
+    try {
+        let image_filename = req.file.filename;
+
+        const food = new Menu({
+            name: req.body.name,
+            description: req.body.description,
+            price: req.body.price,
+            image: image_filename,
+            category: req.body.category,
+            restaurantId: req.body.restaurantId
+        });
+
+        await food.save();
+        res.status(200).json({ success: true, message: 'Food added successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error adding food' });
+    }
 };
 
-// Get all menu items of a restaurant
-exports.getMenuByRestaurant = async (req, res) => {
-  try {
-    const items = await MenuItem.find({ restaurantId: req.params.restaurantId });
-    res.json(items);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+
+const getAllFood = async (req, res) => {
+    try {
+        const foods = await Menu.find({});
+        res.status(200).json({ success: true, data: foods });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error fetching food' });
+    }
 };
 
-// Get a single menu item by menuItemId
-exports.getMenuItemById = async (req, res) => {
-  try {
-    const item = await MenuItem.findOne({ menuItemId: req.params.menuItemId });
-    if (!item) return res.status(404).json({ error: 'Menu item not found' });
-    res.json(item);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+const getFoodById = async (req, res) => {
+    try {
+        const food = await Menu.findById(req.params.id);
+        if (!food) {
+            return res.status(404).json({ success: false, message: 'Menu not found' });
+        }
+        res.status(200).json({ success: true, data: food });
+    } catch (error) {
+        console.error('Error fetching menu item:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+  };
+  
+
+const updateFood = async (req, res) => {
+    const { name, description, price, category, restaurantId } = req.body;
+
+    try {
+        const food = await Menu.findById(req.params.id);
+
+        if (!food) {
+            return res.status(404).json({ success: false, message: 'Food not found' });
+        }
+
+        food.name = name || food.name;
+        food.description = description || food.description;
+        food.price = price || food.price;
+        food.category = category || food.category;
+        food.restaurantId = restaurantId || food.restaurantId;
+
+        if (req.file) {
+            const oldImage = food.image;
+            food.image = req.file.filename;
+
+            fs.unlink(`uploads/${oldImage}`, (err) => {
+                if (err) console.error('Error deleting old image:', err);
+            });
+        }
+
+        await food.save();
+        res.status(200).json({ success: true, message: 'Food updated successfully', data: food });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error updating food' });
+    }
 };
 
-// Update a menu item
-exports.updateMenuItem = async (req, res) => {
-  try {
-    const updated = await MenuItem.findOneAndUpdate(
-      { menuItemId: req.params.menuItemId },
-      req.body,
-      { new: true }
-    );
-    if (!updated) return res.status(404).json({ error: 'Menu item not found' });
-    res.json(updated);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+const deleteFood = async (req, res) => {
+    try {
+        const food = await Menu.findByIdAndDelete(req.params.id);
+        if (!food) {
+            return res.status(404).json({ success: false, message: 'Food not found' });
+        }
+
+        fs.unlink(`uploads/${food.image}`, () => {});
+
+        res.status(200).json({ success: true, message: 'Food deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error deleting food' });
+    }
 };
 
-// Delete a menu item
-exports.deleteMenuItem = async (req, res) => {
-  try {
-    const deleted = await MenuItem.findOneAndDelete({ menuItemId: req.params.menuItemId });
-    if (!deleted) return res.status(404).json({ error: 'Menu item not found' });
-    res.json({ message: 'Menu item deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+const searchFood = async (req, res) => {
+    const { query } = req.query;
+
+    if (!query || query.trim() === '') {
+        return res.status(200).json({ success: true, data: [] });
+    }
+
+    let searchFilter = {
+        $or: [
+            { name: { $regex: query, $options: 'i' } },
+            { menuId: { $regex: query, $options: 'i' } },
+            { restaurantId: { $regex: query, $options: 'i' } },
+            { category: { $regex: query, $options: 'i' } }        ]
+    };
+
+    try {
+        const foods = await Menu.find(searchFilter);
+        res.status(200).json({ success: true, data: foods });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error searching food' });
+    }
 };
+
+
+module.exports = { addFood, getAllFood, getFoodById, updateFood, deleteFood, searchFood };

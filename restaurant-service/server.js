@@ -2,11 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
-const multer = require('multer');
 
-
-const restaurantRoutes = require('./routes/restaurantRoutes');
 const menuRoutes = require('./routes/menuRoutes');
+const restaurantRoutes = require('./routes/restaurantRoutes');
 
 dotenv.config();
 
@@ -16,8 +14,9 @@ app.use(express.json());
 const cors = require('cors');
 app.use(cors());
 
-app.use('/restaurant', restaurantRoutes);
-app.use('/menu', menuRoutes);
+app.use('/api/restaurant', restaurantRoutes);
+app.use('/api/menu', menuRoutes);
+app.use('/images', express.static('uploads'));
 
 
 //mongodb connection string

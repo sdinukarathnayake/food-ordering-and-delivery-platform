@@ -1,59 +1,124 @@
 const Restaurant = require('../models/restaurantModel');
+const fs = require('fs');
 
-// Create a new restaurant
-exports.addRestaurant = async (req, res) => {
+const addRestaurant = async (req, res) => {
   try {
-    const restaurant = new Restaurant(req.body);
+    let image_filename = req.file.filename;
+
+    const { restaurantName, restaurantLocation, lat, lng, status } = req.body; 
+    
+    if (!restaurantName || !restaurantLocation || !lat || !lng || !status) {
+      return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    const newRestaurant = new Restaurant({
+      restaurantName,
+      restaurantLocation,
+      restaurantPhoto: image_filename,
+      lat,
+      lng,
+      status,
+    });
+
+    await newRestaurant.save();
+
+    res.status(201).json({ success: true, message: 'Restaurant added successfully' });
+  } catch (error) {
+    console.error('Error while saving restaurant:', error.message);
+    res.status(500).json({ success: false, message: 'Error adding restaurant' });
+  }
+};
+
+const getAllRestaurants = async (req, res) => {
+  try {
+    const restaurants = await Restaurant.find({});
+    res.status(200).json({ success: true, data: restaurants });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching restaurants', error: error.message });
+  }
+};
+
+const getRestaurantById = async (req, res) => {
+  try {
+    const restaurant = await Restaurant.findById(req.params.id);
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+    res.status(200).json({ success: true, data: restaurant });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+const updateRestaurant = async (req, res) => {
+
+  const { restaurantName, restaurantLocation, lat, lng, status } = req.body;
+
+  try {
+    const restaurant = await Restaurant.findByIdAndUpdate(req.params.id);
+
+    if (!restaurant) {
+      return res.status(404).json({ success: false, message: 'Restaurant not found' });
+    }
+
+    restaurant.restaurantName = restaurantName || restaurant.restaurantName;
+    restaurant.restaurantLocation = restaurantLocation || restaurant.restaurantLocation;
+    restaurant.lat = lat || restaurant.lat;
+    restaurant.lng = lng || restaurant.lng;
+    restaurant.status = status || restaurant.status;
+
+    if (req.file) {
+      const oldImage = restaurant.restaurantPhoto;
+      restaurant.restaurantPhoto = req.file.filename;
+
+      // Delete the old image file
+      fs.unlink(`uploads/${oldImage}`, (err) => {
+        if (err) console.error('Error deleting the old photo:', err);
+      });
+    }
+
     await restaurant.save();
-    res.status(201).json(restaurant);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(200).json({ success: true, message: 'Restaurant updated successfully', data: restaurant });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error updating restaurant' });
   }
 };
 
-// Get all restaurants
-exports.getAllRestaurants = async (req, res) => {
+const deleteRestaurant = async (req, res) => {
   try {
-    const restaurants = await Restaurant.find();
-    res.json(restaurants);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const restaurant = await Restaurant.findByIdAndDelete(req.params.id);
+    if (!restaurant) {
+      return res.status(404).json({ success: false, message: 'Restaurant not found' });
+    }
+
+    fs.unlink(`uploads/${restaurant.restaurantPhoto}`, () => {});
+
+    res.status(200).json({ success: true, message: 'Restaurant deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error deleting restaurant' });
   }
 };
 
-// Get restaurant by restaurantId
-exports.getRestaurantById = async (req, res) => {
-  try {
-    const restaurant = await Restaurant.findOne({ restaurantId: req.params.restaurantId });
-    if (!restaurant) return res.status(404).json({ error: 'Restaurant not found' });
-    res.json(restaurant);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+const searchRestaurant = async (req, res) => {
+  const { query } = req.query;
 
-// Update restaurant by restaurantId
-exports.updateRestaurant = async (req, res) => {
-  try {
-    const updated = await Restaurant.findOneAndUpdate(
-      { restaurantId: req.params.restaurantId },
-      req.body,
-      { new: true }
-    );
-    if (!updated) return res.status(404).json({ error: 'Restaurant not found' });
-    res.json(updated);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  if (!query || query.trim() === '') {
+    return res.status(200).json({ success: true, data: [] });
   }
-};
+  
+  let searchFilter = {
+    $or: [
+      { restaurantName: { $regex: query, $options: 'i' } },
+      { restaurantId: { $regex: query, $options: 'i' } },
+    ],
+  };
 
-// Delete restaurant by restaurantId
-exports.deleteRestaurant = async (req, res) => {
   try {
-    const deleted = await Restaurant.findOneAndDelete({ restaurantId: req.params.restaurantId });
-    if (!deleted) return res.status(404).json({ error: 'Restaurant not found' });
-    res.json({ message: 'Restaurant deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const restaurants = await Restaurant.find(searchFilter);
+    res.status(200).json({ success: true, data: restaurants });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error searching for restaurant' });
   }
-};
+}
+
+module.exports = { addRestaurant, getAllRestaurants, getRestaurantById, updateRestaurant, deleteRestaurant, searchRestaurant };
