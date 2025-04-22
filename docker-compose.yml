@@ -1,0 +1,70 @@
+services:
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "5000:5000"
+
+
+  cart-service:
+    build: ./cart-service
+    container_name: cart-service
+    ports:
+      - "5003:5003"
+
+
+  payment-service:
+    build: ./payment-service
+    container_name: payment-service
+    ports:
+      - "5001:5001"
+
+
+  customer-service:
+    build: ./customer-service
+    container_name: customer-service
+    ports:
+      - "5002:5002"
+
+
+  restaurant-service:
+    build: ./restaurant-service
+    container_name: restaurant-service
+    ports:
+      - "5004:5004"
+
+
+  admin-notification-service:
+    build:
+      context: ./AdminNotificationService
+      dockerfile: Dockerfile
+    ports:
+      - "7000:7000"
+    volumes:
+      - ./AdminNotificationService:/app 
+
+
+  auth-service:
+    build:
+      context: ./AuthService
+      dockerfile: Dockerfile
+    ports:
+      - "7001:7001"
+    volumes:
+      - ./AuthService:/app
+    depends_on:
+      - admin-notification-service
+
+
+  customer-app:
+    build: ./customer-app
+    container_name: customer-app
+    ports:
+      - "5173:5173"
+    depends_on:
+      - order-service
+      - payment-service
+      - customer-service
+      - cart-service
+      - restaurant-service
