@@ -6,7 +6,7 @@ const createOrder = async (req, res) => {
     try {
         const {
             cartId,
-            customerId,
+            customerUsername,
             customerName,
             customerPhone,
             customerEmail,
@@ -24,7 +24,7 @@ const createOrder = async (req, res) => {
 
         // Validate required fields
         if (
-            !cartId || !customerId || !customerName || !customerPhone || !customerEmail ||
+            !cartId || !customerUsername || !customerName || !customerPhone || !customerEmail ||
             !restaurantId || !restaurantName || !restaurantPhone ||
             !restaurantLocationLatitude || !restaurantLocationLongitude ||
             !items || !deliveryLocationLatitude || !deliveryLocationLongitude || !paymentMethod
@@ -62,7 +62,7 @@ const createOrder = async (req, res) => {
 
         const newOrder = new Order({
             cartId,
-            customerId,
+            customerUsername,
             customerName,
             customerPhone,
             customerEmail,
@@ -118,7 +118,21 @@ const viewOrder = async (req, res) => {
 // View customer's order history
 const viewCustomerOrderHistory = async (req, res) => {
     try {
-        const orders = await Order.find({ customerId: req.params.id });
+        const orders = await Order.find({ customerUsername: req.params.id });
+        res.status(200).json(orders);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to retrieve order history" });
+    }
+};
+
+// View customer's order history
+const viewPendingOrderByCustomer = async (req, res) => {
+    try {
+        const orders = await Order.find({
+            customerUsername: req.params.id,
+            orderStatus: { $nin: ['delivered', 'cancelled'] }
+          });
+          
         res.status(200).json(orders);
     } catch (err) {
         res.status(500).json({ message: "Failed to retrieve order history" });
@@ -130,7 +144,7 @@ const updateOrder = async (req, res) => {
     try {
         const {
             cartId,
-            customerId,
+            customerUsername,
             customerName,
             customerPhone,
             customerEmail,
@@ -166,7 +180,7 @@ const updateOrder = async (req, res) => {
             { orderId },
             {
                 cartId,
-                customerId,
+                customerUsername,
                 customerName,
                 customerPhone,
                 customerEmail,
@@ -287,6 +301,7 @@ module.exports = {
     viewAllOrders,
     viewOrder,
     viewCustomerOrderHistory,
+    viewPendingOrderByCustomer,
     updateOrder,
     updateOrderPaymentStatus,
     updateOrderStatus,

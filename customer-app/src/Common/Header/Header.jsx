@@ -47,7 +47,7 @@ function Header() {
             <ul className="menu-items">
           {role === 'Customer' ? (
             <>
-              <li><Link to="/dashboard">Dashboard</Link></li>
+              <li><Link to="/Customer">Dashboard</Link></li>
               <li><Link to="/orders">Order History</Link></li>
               <li><Link to="/profile">User Profile</Link></li>
               <li><Link to="/contact">Contact</Link></li>
