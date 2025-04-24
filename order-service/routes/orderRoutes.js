@@ -1,5 +1,5 @@
 const { 
-    createOrder, viewOrder, viewCustomerOrderHistory, updateOrder, updateOrderPaymentStatus, updateOrderStatus, 
+    createOrder, viewOrder, viewCustomerOrderHistory, viewPendingOrderByCustomer, updateOrder, updateOrderPaymentStatus, updateOrderStatus, 
     updateOrderDeliveryPerson, deleteOrder, viewAllOrders
 } = require('../controllers/orderController');
 
@@ -10,6 +10,8 @@ router.post('/create-order', createOrder);
 
 router.get('/view/:id', viewOrder);
 router.get('/view-history/:id', viewCustomerOrderHistory);
+
+router.get('/view-pending/:id', viewPendingOrderByCustomer);
 
 // update details
 router.put('/update/:id', updateOrder);

@@ -20,7 +20,7 @@ const orderSchema = new mongoose.Schema({
         default: Date.now
     },
 
-    customerId: {
+    customerUsername: {
         type: String,
         required: true
     },
