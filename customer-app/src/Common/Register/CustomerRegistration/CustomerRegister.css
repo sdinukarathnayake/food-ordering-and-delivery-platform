@@ -1,0 +1,167 @@
+/* Base font settings for clean UI */
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+  
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+    background-color: #ffffff;
+  }
+  
+  .form-card {
+    padding: 2rem 2.5rem;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  form {
+    width: 100%;
+  }
+  
+  form label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    color: #222;
+  }
+  
+  form input[type='text'],
+  form input[type='email'],
+  form input[type='password'],
+  form input[type='file'] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    background-color: #f9f9f9;
+  }
+  
+  form input:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #fff;
+  }
+  
+  button[type='submit'] {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.85rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: inherit;
+  }
+  
+  button[type='submit']:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Status messages */
+  form p {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .leaflet-container {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+  }
+
+  .location-btn {
+    margin: 0.5rem 0 1rem;
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .location-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .form-card {
+      padding: 1.5rem;
+    }
+  
+    form label {
+      font-size: 0.95rem;
+    }
+  
+    form input {
+      font-size: 0.95rem;
+      padding: 0.65rem 0.9rem;
+    }
+  
+    button[type='submit'] {
+      font-size: 0.95rem;
+      padding: 0.75rem;
+    }
+
+    .leaflet-container {
+      height: 250px;
+    }
+
+    .location-btn {
+      font-size: 0.95rem;
+      padding: 0.55rem 0.9rem;
+    }
+  }
+
+  .hidden-coordinates {
+    /*display: none;*/
+  }
+  
+  
+  @media (max-width: 480px) {
+    .form-card {
+      padding: 1.25rem;
+      border-radius: 12px;
+    }
+  
+    form label {
+      font-size: 0.9rem;
+    }
+  
+    form input {
+      font-size: 0.9rem;
+    }
+  
+    button[type='submit'] {
+      font-size: 0.9rem;
+      padding: 0.65rem;
+    }
+
+    .leaflet-container {
+      height: 200px;
+    }
+  }
+  

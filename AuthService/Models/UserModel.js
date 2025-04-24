@@ -32,21 +32,22 @@ const UserModel = mongoose.Schema({
     },
 
     //resturntAdmin only
-
     resturantName:{type:String,
         required:function(){
             return this.role ==="ResturantAdmin"
         }
     },
 
-    //delivery person only
-    status:{
-        type:String,
-        default:function(){
-            return this.role ==="DeliveryPerson"
+    //delivery person only  
+    // updated
+    status: {
+        type: String,
+        default: function() {
+            if (this.role === "DeliveryPerson") return "pending";
+            if (this.role === "Customer") return "approved";
+            return undefined; 
         },
-        enum:["pending","approved","rejected"],
-        default:"pending"
+        enum: ["pending", "approved", "rejected"]
     }
 })
 

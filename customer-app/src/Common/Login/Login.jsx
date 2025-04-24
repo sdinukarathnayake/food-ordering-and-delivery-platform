@@ -30,6 +30,8 @@ function Login() {
         const decode = jwtDecode(token);
         console.log(decode); //debugging
 
+        localStorage.setItem('token', response.data.token);
+
         if (decode.role === 'SystemAdmin') {
             navigate('/AdminDashBoard')
         } else if (decode.role === 'ResturantAdmin') {

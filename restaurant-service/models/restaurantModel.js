@@ -13,7 +13,6 @@ const restaurantSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    
     restaurantPhoto: {
         type: String,
         required: true

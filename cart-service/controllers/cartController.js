@@ -3,19 +3,19 @@ const Cart = require('../models/cartModel');
 const createCart = async (req, res) => {
     try {
         const {
-            customerId,
+            name,
             restaurantId,
             items,
             subtotal
         } = req.body;
 
         // Basic validation
-        if (!customerId || !restaurantId || !items || !subtotal) {
+        if (!name || !restaurantId || !items || !subtotal) {
             return res.status(400).json({ message: "Missing required fields." });
         }
 
         const newCart = new Cart({
-            customerId,
+            name,
             restaurantId,
             items,
             subtotal
@@ -59,7 +59,7 @@ const viewCart = async (req, res) => {
 // Update cart by cartId
 const updateCart = async (req, res) => {
     try {
-        const { customerId, restaurantId, items, subtotal } = req.body;
+        const { name, restaurantId, items, subtotal } = req.body;
         const cartId = req.params.id;
 
         const cart = await Cart.findOne({ cartId });
@@ -70,7 +70,7 @@ const updateCart = async (req, res) => {
 
         const updatedCart = await Cart.findOneAndUpdate(
             { cartId },
-            { customerId, restaurantId, items, subtotal },
+            { name, restaurantId, items, subtotal },
             { new: true }
         );
 
