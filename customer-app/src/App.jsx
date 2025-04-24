@@ -37,6 +37,7 @@ const {user} = useContext(AuthContext);
   return(
     <>
     <Header/>
+    
     <Routes>
     {
       user ? (

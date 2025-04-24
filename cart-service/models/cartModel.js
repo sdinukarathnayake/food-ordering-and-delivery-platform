@@ -10,7 +10,7 @@ const cartSchema = new mongoose.Schema({
         unique: true
     },
 
-    customerId: {
+    name: {
         type: String,
         required: true
     },

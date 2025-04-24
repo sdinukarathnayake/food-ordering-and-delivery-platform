@@ -1,11 +1,9 @@
 const Customer = require('../models/customerModel');
 
-// register a new customer
 const register = async (req, res) => {
     try {
         const { customerName, email, phone, name, password, currentLocationLatitude, currentLocationLongitude } = req.body;
 
-        // Check for duplicate email or username
         const existingEmail = await Customer.findOne({ email });
         const existingUsername = await Customer.findOne({ name });
 
@@ -28,7 +26,7 @@ const register = async (req, res) => {
     }
 };
 
-// view all customers
+
 const viewAllCustomers = async (req, res) => {
     try {
         const customers = await Customer.find();
@@ -39,10 +37,9 @@ const viewAllCustomers = async (req, res) => {
 };
 
 
-// view a specific customer by customerId
 const viewCustomer = async (req, res) => {
     try {
-        const customer = await Customer.findOne({ customerId: req.params.id });
+        const customer = await Customer.findOne({ name: req.params.id });
         if (!customer) {
             return res.status(404).json({ message: "Customer not found" });
         }
@@ -53,20 +50,19 @@ const viewCustomer = async (req, res) => {
 };
 
 
-// update customer by customerId
 const updateCustomer = async (req, res) => {
     try {
         const {  customerName, email, phone } = req.body;
-        const customerId = req.params.id;
+        const name = req.params.id;
 
-        const customer = await Customer.findOne({ customerId });
+        const customer = await Customer.findOne({ name });
 
         if (!customer) {
             return res.status(404).json({ message: "Customer not found" });
         }
 
         const updatedCustomer = await Customer.findOneAndUpdate(
-            { customerId },
+            { name },
             {  customerName, email, phone },
             { new: true }
         );
@@ -80,20 +76,19 @@ const updateCustomer = async (req, res) => {
 };
 
 
-// update customer password only
 const updateCustomerPassword = async (req, res) => {
     try {
         const { password } = req.body;
-        const customerId = req.params.id;
+        const name = req.params.id;
 
-        const customer = await Customer.findOne({ customerId });
+        const customer = await Customer.findOne({ name });
 
         if (!customer) {
             return res.status(404).json({ message: "Customer not found" });
         }
 
         const updatedCustomer = await Customer.findOneAndUpdate(
-            { customerId },
+            { name },
             { password },
             { new: true }
         );
@@ -107,19 +102,18 @@ const updateCustomerPassword = async (req, res) => {
 };
 
 
-// Update customer location only
 const updateCustomerLocation = async (req, res) => {
     try {
         const { currentLocationLatitude, currentLocationLongitude } = req.body;
-        const customerId = req.params.id;
+        const name = req.params.id;
 
-        const customer = await Customer.findOne({ customerId });
+        const customer = await Customer.findOne({ name });
         if (!customer) {
             return res.status(404).json({ message: "Customer not found" });
         }
 
         const updatedCustomer = await Customer.findOneAndUpdate(
-            { customerId },
+            { name },
             { currentLocationLatitude, currentLocationLongitude },
             { new: true }
         );
@@ -133,10 +127,9 @@ const updateCustomerLocation = async (req, res) => {
 };
 
 
-// Delete customer by customerId
 const deleteCustomer = async (req, res) => {
     try {
-        const deletedCustomer = await Customer.findOneAndDelete({ customerId: req.params.id });
+        const deletedCustomer = await Customer.findOneAndDelete({ name: req.params.id });
         if (!deletedCustomer) {
             return res.status(404).json({ message: "Customer not found" });
         }
