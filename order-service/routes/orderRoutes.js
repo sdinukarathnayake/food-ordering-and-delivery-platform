@@ -1,6 +1,6 @@
 const { 
     createOrder, viewOrder, viewCustomerOrderHistory, viewPendingOrderByCustomer, updateOrder, updateOrderPaymentStatus, updateOrderStatus, 
-    updateOrderDeliveryPerson, deleteOrder, viewAllOrders
+    updateOrderDeliveryPerson, deleteOrder, viewAllOrders 
 } = require('../controllers/orderController');
 
 const express = require('express');

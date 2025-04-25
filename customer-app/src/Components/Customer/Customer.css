@@ -1,6 +1,6 @@
 .customer-dashboard {
   padding: 1rem;
-  margin: 100px auto 0px auto;
+  margin: auto;
   width: 80%;
   font-family: 'Segoe UI', sans-serif;
   background-color: #fffbe6;
@@ -257,28 +257,71 @@
 
 /* Pending Orders */
 .pending-orders {
-  background-color: #fff3cd;
-  border-left: 5px solid #ff9800;
-  padding: 1rem;
+  background: #fff3cd;
+  padding: 1.5rem;
+  border-radius: 8px;
   margin-bottom: 2rem;
-  border-radius: 6px;
+  border-top: 4px solid orange;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 
 .pending-orders h3 {
+  font-size: 1.3rem;
   color: #e65100;
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.pending-orders-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .pending-order-card {
   background: #fffbe6;
-  border: 1px solid #ffe082;
-  border-radius: 4px;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ffcc80;
   color: #444;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
 }
 
+.pending-order-card p {
+  margin: 0.3rem 0;
+}
+
+.view-order-btn {
+  background-color: #ff7a00;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.8rem;
+}
+
+.view-order-btn:hover {
+  background-color: #ff6600;
+}
+
+.clock-icon {
+  font-size: 1.2rem;
+}
+
+.view-all-orders-btn {
+  background-color: #ff7a00;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 0.8rem;
+}
 
 
 /* Responsive Design */

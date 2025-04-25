@@ -48,7 +48,9 @@ function Header() {
           {role === 'Customer' ? (
             <>
               <li><Link to="/Customer">Dashboard</Link></li>
-              <li><Link to="/orders">Order History</Link></li>
+              {token && (
+                <li><Link to={`/order-history/${jwtDecode(token).name}`}>Order History</Link></li>
+                )}
               <li><Link to="/profile">User Profile</Link></li>
               <li><Link to="/contact">Contact</Link></li>
             </>

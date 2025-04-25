@@ -13,6 +13,10 @@ import RejectedResturants from "./Components/SystemAdmin/Rejected/RejectedRestur
 
 //customer
 import Customer from "./Components/Customer/Customer";
+import PaymentSuccess from "./Components/Customer/PaymentSuccess";
+import PaymentCancel from "./Components/Customer/PaymentCancel";
+import OrderDetails from './Components/Customer/OrderDetails';
+import OrderHistory from './Components/Customer/OrderHistory';
 
 //resturnat
 import Resturant from "./Components/Resturant/Resturant";
@@ -61,7 +65,13 @@ const {user} = useContext(AuthContext);
 
         {
           user.role ==="Customer" &&(
+            <>
             <Route path="/Customer" element={<Customer/>}/>
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-cancel" element={<PaymentCancel />} />
+            <Route path="/order-details/:id" element={<OrderDetails />} />
+            <Route path="/order-history/:username" element={<OrderHistory />} />
+            </>
           ) 
         }
 
