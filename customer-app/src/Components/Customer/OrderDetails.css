@@ -1,0 +1,22 @@
+.order-details-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #fff8e1;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .order-details-container h2 {
+    color: #e65100;
+    margin-bottom: 1rem;
+  }
+  
+  .order-details-container p {
+    margin: 0.5rem 0;
+  }
+  
+  .order-details-container ul {
+    padding-left: 1.2rem;
+  }
+  

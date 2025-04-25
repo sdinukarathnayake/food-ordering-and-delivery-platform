@@ -1,0 +1,125 @@
+.order-history-page {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.history-heading {
+    color: #FFA500;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.order-history-page h3 {
+    margin-top: 2rem;
+    font-size: 1.4rem;
+    color: #444;
+    border-bottom: 2px solid #f5c35c;
+    display: inline-block;
+    padding-bottom: 0.3rem;
+}
+
+.order-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.order-card {
+    background-color: #fffdfa;
+    border: 1px solid #eee;
+    border-left: 6px solid #ff9800;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.order-card.completed {
+    border-left-color: #4caf50;
+    background-color: #f1fff3;
+}
+
+.order-card.cancelled {
+    border-left-color: #f44336;
+    background-color: #fff4f4;
+}
+
+.order-card h3 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.order-card h4 {
+    margin-top: 1.2rem;
+    color: #FF8C00;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.order-card p {
+    margin: 0.3rem 0;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.order-card ul {
+    margin-top: 0.5rem;
+    padding-left: 1.25rem;
+}
+
+.order-card li {
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.order-status {
+    font-weight: bold;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+}
+
+.order-status.pending {
+    color: #ff9800;
+    background-color: #fff3e0;
+}
+
+.order-status.confirmed,
+.order-status.preparing,
+.order-status.readyForPickup,
+.order-status.driverAssigned,
+.order-status.driverAccepted,
+.order-status.outForDelivery {
+    color: #2196f3;
+    background-color: #e3f2fd;
+}
+
+.order-status.delivered {
+    color: #4caf50;
+    background-color: #e8f5e9;
+}
+
+.order-status.cancelled {
+    color: #f44336;
+    background-color: #ffebee;
+}
+
+@media (max-width: 768px) {
+    .order-card {
+        padding: 1rem;
+    }
+
+    .order-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .order-card h4 {
+        font-size: 0.95rem;
+    }
+
+    .order-card p, .order-card li {
+        font-size: 0.9rem;
+    }
+}

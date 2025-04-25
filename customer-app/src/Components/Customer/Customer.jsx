@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -39,6 +40,7 @@ function Customer() {
     const [notes, setNotes] = useState('');
     const [error, setError] = useState(null);
     const [pendingOrders, setPendingOrders] = useState([]); 
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -119,11 +121,15 @@ function Customer() {
         setShowConfirmation(true);
     };
 
+
     const handlePlaceOrder = async () => {
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
+        const deliveryCharge = 100;
+        const totalAmount = subtotal + deliveryCharge;
+    
         try {
-            await axios.post('http://localhost:5000/orders/create-order', {
+            // Step 1: Create Order in Backend
+            const response = await axios.post('http://localhost:5000/orders/create-order', {
                 cartId: `CART-${customer.name}-${Date.now()}`,
                 customerUsername: customer.name,
                 customerName: customer.customerName,
@@ -139,21 +145,57 @@ function Customer() {
                     quantity: item.quantity,
                     price: item.price
                 })),
-                deliveryLocationLatitude: deliveryLocationLatitude,
-                deliveryLocationLongitude: deliveryLocationLongitude,
+                deliveryLocationLatitude,
+                deliveryLocationLongitude,
                 paymentMethod: 'Card',
-                notes
+                notes,
+                paymentStatus: 'Pending',
+                totalAmount
             });
-
-            setCart([]);
-            setShowConfirmation(false);
-            alert('Order placed successfully!');
+    
+            const order = response.data.order;
+    
+            // Step 2: Submit PayHere Payment Form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://sandbox.payhere.lk/pay/checkout';
+    
+            const fields = {
+                merchant_id: '1230253',
+                return_url: 'http://localhost:5173/payment-success',
+                cancel_url: 'http://localhost:5173/payment-cancel',
+                notify_url: 'http://localhost:5000/orders/payhere-callback',
+                order_id: order.orderId,
+                items: `Order from BigBite`,
+                amount: '3175.00',
+                currency: 'LKR',
+                first_name: customer.customerName,
+                last_name: 'User',
+                email: customer.email,
+                phone: customer.phone,
+                address: 'Colombo',
+                city: 'Colombo',
+                country: 'Sri Lanka'
+            };
+    
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            }
+    
+            document.body.appendChild(form);
+            form.submit();
+    
         } catch (err) {
             console.error('Order creation failed:', err);
             alert('Failed to place order.');
         }
     };
-   
+    
+     
 
     return (
 
@@ -170,19 +212,37 @@ function Customer() {
                 </div>
 
                 <div>
+                
                 {pendingOrders.length > 0 && (
                 <div className="pending-orders">
-                    <h3>🕒 Your Pending Orders</h3>
-                    {pendingOrders.map((order, index) => (
-                    <div key={index} className="pending-order-card">
+                    <h3><span className="clock-icon">⏰</span> Your Pending Orders</h3>
+                    <div className="pending-orders-grid">
+                    {pendingOrders.map((order) => (
+                        <div key={order.orderId} className="pending-order-card">
                         <p><strong>Restaurant:</strong> {order.restaurantName}</p>
-                        <p><strong>Items:</strong> {order.items.map(i => `${i.quantity}x ${i.itemId}`).join(', ')}</p>
+                        <p><strong>Items:</strong> {order.items.map(item => `1x ${item.itemId}`).join(', ')}</p>
                         <p><strong>Total:</strong> Rs. {order.totalAmount}</p>
                         <p><strong>Status:</strong> {order.orderStatus}</p>
-                    </div>
+                        <button className="view-order-btn" onClick={() => window.location.href = `/order-details/${order.orderId}`}>
+                            View Order
+                        </button>
+                        </div>
                     ))}
+                    </div>
+
+                    <div>
+                    <button
+                        className="view-all-orders-btn"
+                        onClick={() => navigate(`/order-history/${customer.name}`)}
+                        >
+                        View All Orders
+                        </button>
+
+                        </div>
                 </div>
                 )}
+
+
                     </div>
                 
           <div className="restaurant-grid">
