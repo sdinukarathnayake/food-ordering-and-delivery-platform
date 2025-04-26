@@ -1,6 +1,6 @@
 const { 
     createOrder, viewOrder, viewCustomerOrderHistory, viewPendingOrderByCustomer, updateOrder, updateOrderPaymentStatus, updateOrderStatus, 
-    updateOrderDeliveryPerson, deleteOrder, viewAllOrders 
+    updateOrderDeliveryPerson, deleteOrder, viewAllOrders, updateOrderPaymentStatusAfterSuccess 
 } = require('../controllers/orderController');
 
 const express = require('express');
@@ -17,6 +17,7 @@ router.get('/view-pending/:id', viewPendingOrderByCustomer);
 router.put('/update/:id', updateOrder);
 router.put('/update-payment-status/:id', updateOrderPaymentStatus);
 router.put('/update-order-status/:id', updateOrderStatus);
+router.put('/mark-paid/:id', updateOrderPaymentStatusAfterSuccess);
 
 router.put('/update-delivery-person/:id', updateOrderDeliveryPerson);
 

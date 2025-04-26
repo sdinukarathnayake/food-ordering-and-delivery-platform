@@ -124,76 +124,54 @@ function Customer() {
 
     const handlePlaceOrder = async () => {
         const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        const deliveryCharge = 100;
-        const totalAmount = subtotal + deliveryCharge;
-    
+        const totalAmount = subtotal + 100; // delivery fee
+      
         try {
-            // Step 1: Create Order in Backend
-            const response = await axios.post('http://localhost:5000/orders/create-order', {
-                cartId: `CART-${customer.name}-${Date.now()}`,
-                customerUsername: customer.name,
-                customerName: customer.customerName,
-                customerPhone: customer.phone,
-                customerEmail: customer.email,
-                restaurantId: selectedRestaurantDetails.restaurantId,
-                restaurantName: selectedRestaurantDetails.restaurantName,
-                restaurantPhone: '0112223333',
-                restaurantLocationLatitude: selectedRestaurantDetails.lat,
-                restaurantLocationLongitude: selectedRestaurantDetails.lng,
-                items: cart.map(item => ({
-                    itemId: item.itemId,
-                    quantity: item.quantity,
-                    price: item.price
-                })),
-                deliveryLocationLatitude,
-                deliveryLocationLongitude,
-                paymentMethod: 'Card',
-                notes,
-                paymentStatus: 'Pending',
-                totalAmount
-            });
-    
-            const order = response.data.order;
-    
-            // Step 2: Submit PayHere Payment Form
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'https://sandbox.payhere.lk/pay/checkout';
-    
-            const fields = {
-                merchant_id: '1230253',
-                return_url: 'http://localhost:5173/payment-success',
-                cancel_url: 'http://localhost:5173/payment-cancel',
-                notify_url: 'http://localhost:5000/orders/payhere-callback',
-                order_id: order.orderId,
-                items: `Order from BigBite`,
-                amount: '3175.00',
-                currency: 'LKR',
-                first_name: customer.customerName,
-                last_name: 'User',
-                email: customer.email,
-                phone: customer.phone,
-                address: 'Colombo',
-                city: 'Colombo',
-                country: 'Sri Lanka'
-            };
-    
-            for (const [key, value] of Object.entries(fields)) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = value;
-                form.appendChild(input);
-            }
-    
-            document.body.appendChild(form);
-            form.submit();
-    
+          // 1. Create order
+          const response = await axios.post('http://localhost:5000/orders/create-order', {
+            cartId: `CART-${customer.name}-${Date.now()}`,
+            customerUsername: customer.name,
+            customerName: customer.customerName,
+            customerPhone: customer.phone,
+            customerEmail: customer.email,
+            restaurantId: selectedRestaurantDetails.restaurantId,
+            restaurantName: selectedRestaurantDetails.restaurantName,
+            restaurantPhone: '0112223333',
+            restaurantLocationLatitude: selectedRestaurantDetails.lat,
+            restaurantLocationLongitude: selectedRestaurantDetails.lng,
+            items: cart.map(item => ({
+                itemId: item.itemId,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            deliveryLocationLatitude,
+            deliveryLocationLongitude,
+            paymentMethod: 'Card',
+            notes,
+            paymentStatus: "Pending",
+            totalAmount
+          });
+      
+          const order = response.data.order; // Created order object
+      
+          // 2. Create Stripe Checkout Session
+          const res = await axios.post('http://localhost:5000/stripe/create-checkout-session', {
+            orderId: order.orderId,
+            amount: order.totalAmount,
+            customerEmail: order.customerEmail,
+            customerName: order.customerName,
+        });
+        
+        // Redirect to Stripe checkout
+        window.location.href = res.data.url;
+        
+      
         } catch (err) {
-            console.error('Order creation failed:', err);
-            alert('Failed to place order.');
+          console.error('Order creation failed:', err);
+          alert('Failed to place order.');
         }
-    };
+      };
+         
     
      
 
