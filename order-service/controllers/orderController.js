@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const crypto = require('crypto');
 const getDrivingDistance = require('../utils/getDrivingDistance');
 
 // Create a new order
@@ -296,6 +297,25 @@ const deleteOrder = async (req, res) => {
     }
 };
 
+
+const updateOrderPaymentStatusAfterSuccess = async (req, res) => {
+    try {
+      const sessionId = req.params.id;
+      const order = await Order.findOneAndUpdate(
+        { orderId: sessionId },
+        { paymentStatus: "Paid" },
+        { new: true }
+      );
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+      res.status(200).json({ message: 'Payment marked as paid', order });
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to update payment status' });
+    }
+  };
+  
+
 module.exports = {
     createOrder,
     viewAllOrders,
@@ -306,5 +326,6 @@ module.exports = {
     updateOrderPaymentStatus,
     updateOrderStatus,
     updateOrderDeliveryPerson,
-    deleteOrder
+    deleteOrder,
+    updateOrderPaymentStatusAfterSuccess
 };

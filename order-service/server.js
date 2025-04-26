@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const orderRoutes = require('./routes/orderRoutes');
+const stripeRoutes = require('./routes/stripeRoutes');
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/orders', orderRoutes);
+app.use('/stripe', stripeRoutes);
  
 //mongodb connection string
 const connectionString = process.env.MONGO_URI;

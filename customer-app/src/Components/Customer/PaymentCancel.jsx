@@ -6,8 +6,8 @@ function PaymentCancel() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigate('/');
-    }, 4000);
+      navigate('/Customer');
+    }, 3000);
 
     return () => clearTimeout(timeout);
   }, [navigate]);
