@@ -95,14 +95,20 @@ function OrderHistory() {
       {otherOrders.length > 0 && (
         <div>
           <h3>Active Orders</h3>
-          {otherOrders.map(renderOrder)}
+          <div className="order-history-list">
+            {otherOrders.map(renderOrder)}
+          </div>
+
         </div>
       )}
 
       {completedOrders.length > 0 && (
         <div>
           <h3>Completed Orders</h3>
+          <div className="order-history-list">
           {completedOrders.map(renderOrder)}
+        </div>
+
         </div>
       )}
 

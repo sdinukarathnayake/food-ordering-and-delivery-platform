@@ -1,8 +1,7 @@
 .order-history-page {
     padding: 2rem;
-    max-width: 1000px;
+    max-width: 1200px; /* Optional: Increase for wider screens */
     margin: 0 auto;
-    font-family: 'Segoe UI', sans-serif;
 }
 
 .history-heading {
@@ -21,20 +20,6 @@
     padding-bottom: 0.3rem;
 }
 
-.order-history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.order-card {
-    background-color: #fffdfa;
-    border: 1px solid #eee;
-    border-left: 6px solid #ff9800;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
 
 .order-card.completed {
     border-left-color: #4caf50;
@@ -121,5 +106,34 @@
 
     .order-card p, .order-card li {
         font-size: 0.9rem;
+    }
+}
+
+
+
+.order-history-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    width: 100%; /* Ensure full width */
+}
+
+
+.order-card {
+    background-color: #fffdfa;
+    border: 1px solid #eee;
+    border-left: 6px solid #ff9800;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    width: calc(50% - 1rem); /* Two cards per row */
+    box-sizing: border-box;
+}
+
+
+@media (max-width: 768px) {
+    .order-card {
+        width: 100%;
     }
 }
